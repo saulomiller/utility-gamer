@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application
+    x:Class="UtilityGamer.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+            <!-- TabViewItem sem botao de fechar -->
+            <Style TargetType="TabViewItem">
+                <Setter Property="IsClosable" Value="False"/>
+            </Style>
+
+            <!-- Checkbox: cor accent azul -->
+            <SolidColorBrush x:Key="CheckBoxCheckedForeground" Color="White"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedBackground" Color="#4F8EF7"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedBorderBrush" Color="#4F8EF7"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedPointerOverBackground" Color="#6BA3F8"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedPointerOverBorderBrush" Color="#6BA3F8"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedPressedBackground" Color="#3A72D6"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedPressedBorderBrush" Color="#3A72D6"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedDisabledBackground" Color="#2A4A7A"/>
+            <SolidColorBrush x:Key="CheckBoxCheckedDisabledBorderBrush" Color="#2A4A7A"/>
+
+            <SolidColorBrush x:Key="AccentBrush"           Color="#4F8EF7"/>
+            <SolidColorBrush x:Key="AccentHoverBrush"      Color="#6BA3F8"/>
+            <SolidColorBrush x:Key="AccentPressedBrush"    Color="#3A72D6"/>
+            <SolidColorBrush x:Key="DangerBrush"           Color="#E05C5C"/>
+            <SolidColorBrush x:Key="DangerHoverBrush"      Color="#E87070"/>
+            <SolidColorBrush x:Key="DangerPressedBrush"    Color="#C44A4A"/>
+            <SolidColorBrush x:Key="SuccessBrush"          Color="#3CB97A"/>
+            <SolidColorBrush x:Key="SuccessHoverBrush"     Color="#50C98A"/>
+            <SolidColorBrush x:Key="SuccessPressedBrush"   Color="#2A9A65"/>
+            <SolidColorBrush x:Key="GhostBorderBrush"      Color="#3A4A5A"/>
+            <SolidColorBrush x:Key="GhostHoverBrush"       Color="#1E2D3D"/>
+            <SolidColorBrush x:Key="SurfaceBrush"          Color="#111C27"/>
+            <SolidColorBrush x:Key="CardBrush"             Color="#162030"/>
+            <SolidColorBrush x:Key="CardBorderBrush"       Color="#1F3045"/>
+            <SolidColorBrush x:Key="HeaderRowBrush"        Color="#1A2D40"/>
+            <SolidColorBrush x:Key="MutedFgBrush"          Color="#7A92A8"/>
+            <SolidColorBrush x:Key="FgBrush"               Color="#D4E4F0"/>
+
+            <Style TargetType="Page">
+                <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource FgBrush}"/>
+            </Style>
+
+            <Style x:Key="CardTitleTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize"         Value="15"/>
+                <Setter Property="FontWeight"       Value="SemiBold"/>
+                <Setter Property="Foreground"       Value="{StaticResource FgBrush}"/>
+                <Setter Property="CharacterSpacing" Value="20"/>
+            </Style>
+
+            <Style x:Key="SectionTitleTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize"         Value="11"/>
+                <Setter Property="FontWeight"       Value="SemiBold"/>
+                <Setter Property="Foreground"       Value="{StaticResource MutedFgBrush}"/>
+                <Setter Property="CharacterSpacing" Value="60"/>
+            </Style>
+
+            <Style x:Key="MutedTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource MutedFgBrush}"/>
+                <Setter Property="FontSize"   Value="13"/>
+            </Style>
+
+            <Style x:Key="CardBorderStyle" TargetType="Border">
+                <Setter Property="Background"      Value="{StaticResource CardBrush}"/>
+                <Setter Property="BorderBrush"     Value="{StaticResource CardBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius"    Value="10"/>
+                <Setter Property="Padding"         Value="20"/>
+                <Setter Property="Margin"          Value="0,0,0,12"/>
+            </Style>
+
+            <Style x:Key="AppTabViewStyle" TargetType="TabView">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Padding"    Value="0"/>
+            </Style>
+
+            <!-- TabViewItem: ativa com background escuro -->
+            <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="#162030"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderBackgroundPointerOver" Color="#1A2D40"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderBackgroundPressed" Color="#1A2D40"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderForegroundSelected" Color="#D4E4F0"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderForeground" Color="#7A92A8"/>
+            <SolidColorBrush x:Key="TabViewItemHeaderForegroundPointerOver" Color="#D4E4F0"/>
+
+            <Style x:Key="BaseButtonStyle" TargetType="Button">
+                <Setter Property="Height"          Value="34"/>
+                <Setter Property="Padding"         Value="16,0"/>
+                <Setter Property="FontSize"        Value="13"/>
+                <Setter Property="FontWeight"      Value="SemiBold"/>
+                <Setter Property="CornerRadius"    Value="7"/>
+                <Setter Property="Margin"          Value="0,0,8,0"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Style>
+
+            <Style x:Key="PrimaryActionButtonStyle" TargetType="Button"
+                   BasedOn="{StaticResource BaseButtonStyle}">
+                <Setter Property="Background"  Value="{StaticResource AccentBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                <Setter Property="Foreground"  Value="White"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AccentHoverBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AccentPressedBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.08" To="0.75"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Bg" Storyboard.TargetProperty="Opacity" Duration="0" To="0.4"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Bg" Background="{StaticResource AccentBrush}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1" CornerRadius="{TemplateBinding CornerRadius}"/>
+                                <ContentPresenter x:Name="ContentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="{TemplateBinding Padding}" Foreground="White"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SecondaryActionButtonStyle" TargetType="Button"
+                   BasedOn="{StaticResource BaseButtonStyle}">
+                <Setter Property="Background"  Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GhostBorderBrush}"/>
+                <Setter Property="Foreground"  Value="{StaticResource FgBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource GhostHoverBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AccentBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.08" To="0.65"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Bg" Storyboard.TargetProperty="Opacity" Duration="0" To="0.35"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Bg" Background="Transparent" BorderBrush="{StaticResource GhostBorderBrush}" BorderThickness="1" CornerRadius="{TemplateBinding CornerRadius}"/>
+                                <ContentPresenter x:Name="ContentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="{TemplateBinding Padding}" Foreground="{StaticResource FgBrush}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="DangerActionButtonStyle" TargetType="Button"
+                   BasedOn="{StaticResource BaseButtonStyle}">
+                <Setter Property="Background"  Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="{StaticResource DangerBrush}"/>
+                <Setter Property="Foreground"  Value="{StaticResource DangerBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource DangerBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource DangerPressedBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Bg" Storyboard.TargetProperty="Opacity" Duration="0" To="0.35"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Bg" Background="Transparent" BorderBrush="{StaticResource DangerBrush}" BorderThickness="1" CornerRadius="{TemplateBinding CornerRadius}"/>
+                                <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="{TemplateBinding Padding}" Foreground="{StaticResource DangerBrush}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SuccessActionButtonStyle" TargetType="Button"
+                   BasedOn="{StaticResource BaseButtonStyle}">
+                <Setter Property="Background"  Value="{StaticResource SuccessBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}"/>
+                <Setter Property="Foreground"  Value="White"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SuccessHoverBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bg" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SuccessPressedBrush}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Bg" Storyboard.TargetProperty="Opacity" Duration="0" To="0.4"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border x:Name="Bg" Background="{StaticResource SuccessBrush}" BorderBrush="{StaticResource SuccessBrush}" BorderThickness="1" CornerRadius="{TemplateBinding CornerRadius}"/>
+                                <ContentPresenter x:Name="ContentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="{TemplateBinding Padding}" Foreground="White"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+
+

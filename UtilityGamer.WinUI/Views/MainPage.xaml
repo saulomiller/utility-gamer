@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Page
+    x:Class="UtilityGamer.WinUI.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:ctrl="using:UtilityGamer.WinUI.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:UtilityGamer.WinUI.Models"
+    mc:Ignorable="d"
+    Loaded="OnLoaded">
+
+
+    <!-- Root -->
+
+
+    <Grid Background="{StaticResource SurfaceBrush}"
+          RowDefinitions="*,Auto">
+
+        <controls:TabView
+            x:Name="MainTabView"
+            Margin="14"
+            IsAddTabButtonVisible="False"
+            Style="{StaticResource AppTabViewStyle}"
+            TabWidthMode="Equal">
+
+            <!-- Resolutions tab -->
+
+
+            <controls:TabViewItem Header="Resolutions" IsClosable="False">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="0">
+
+                        <!-- CARD: Monitored games -->
+                        <Border Style="{StaticResource CardBorderStyle}">
+                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+                                <TextBlock
+                                    Margin="0,0,0,14"
+                                    Style="{StaticResource CardTitleTextStyle}"
+                                    Text="MONITORED GAMES"/>
+
+                                <!-- Header row -->
+                                <Border
+                                    Grid.Row="1"
+                                    Background="{StaticResource HeaderRowBrush}"
+                                    CornerRadius="6"
+                                    Padding="12,7"
+                                    Margin="0,0,0,2">
+                                    <Grid ColumnSpacing="10"
+                                          ColumnDefinitions="170,140,140,100,*">
+                                        <TextBlock
+                                            Text="Name"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            CharacterSpacing="40"
+                                            Foreground="{StaticResource MutedFgBrush}"/>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="Process"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            CharacterSpacing="40"
+                                            Foreground="{StaticResource MutedFgBrush}"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Text="Monitor"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            CharacterSpacing="40"
+                                            Foreground="{StaticResource MutedFgBrush}"/>
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            Text="Power"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            CharacterSpacing="40"
+                                            Foreground="{StaticResource MutedFgBrush}"/>
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Text="Executable"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            CharacterSpacing="40"
+                                            Foreground="{StaticResource MutedFgBrush}"/>
+                                    </Grid>
+                                </Border>
+
+                                <ListView
+                                    x:Name="GamesListView"
+                                    Grid.Row="2"
+                                    Height="220"
+                                    SelectionChanged="OnGamesSelectionChanged">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:GameProfile">
+                                            <Grid
+                                                MinHeight="38"
+                                                ColumnSpacing="10"
+                                                Padding="12,0"
+                                                ColumnDefinitions="170,140,140,100,*">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    Foreground="{StaticResource FgBrush}"
+                                                    Text="{x:Bind Name}"/>
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    Foreground="{StaticResource FgBrush}"
+                                                    Text="{x:Bind ProcessName}"/>
+                                                <TextBlock
+                                                    Grid.Column="2"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="{StaticResource MutedFgBrush}"
+                                                    Text="{x:Bind MonitorDeviceName, TargetNullValue='Primary'}"
+                                                    TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock
+                                                    Grid.Column="3"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="{StaticResource MutedFgBrush}"
+                                                    Text="{x:Bind PowerPlanDisplayName, TargetNullValue='-'}"/>
+                                                <TextBlock
+                                                    Grid.Column="4"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    Foreground="{StaticResource MutedFgBrush}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="NoWrap"
+                                                    Text="{x:Bind ExePath}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+
+                                <!-- Buttons -->
+                                <StackPanel
+                                    Grid.Row="3"
+                                    Margin="0,14,0,0"
+                                    Orientation="Horizontal"
+                                    Spacing="2">
+                                    <Button
+                                        Click="OnAddGameClicked"
+                                        Content="Add game"
+                                        Style="{StaticResource PrimaryActionButtonStyle}"/>
+                                    <Button
+                                        Click="OnRemoveSelectedClicked"
+                                        Content="Remove selected"
+                                        Style="{StaticResource DangerActionButtonStyle}"/>
+                                </StackPanel>
+
+                            </Grid>
+                        </Border>
+
+                        <!-- CARD: Desktop resolution per app -->
+                        <Border Style="{StaticResource CardBorderStyle}">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+
+                                <TextBlock
+                                    Margin="0,0,0,14"
+                                    Style="{StaticResource CardTitleTextStyle}"
+                                    Text="DESKTOP RESOLUTION PER APP"/>
+
+                                <!-- Selected app chip -->
+                                <Border
+                                    Grid.Row="1"
+                                    Margin="0,0,0,16"
+                                    Padding="10,5"
+                                    Background="{StaticResource HeaderRowBrush}"
+                                    BorderBrush="{StaticResource CardBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    HorizontalAlignment="Left">
+                                    <TextBlock
+                                        x:Name="SelectedGameText"
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="{StaticResource AccentBrush}"
+                                        Text="Selected app: none"/>
+                                </Border>
+
+                                <CheckBox
+                                    x:Name="ResolutionSwitchCheck"
+                                    Grid.Row="2"
+                                    Margin="0,0,0,12"
+                                    Content="Switch desktop resolution automatically"
+                                    Checked="OnResolutionSwitchChanged"
+                                    Unchecked="OnResolutionSwitchChanged"/>
+
+                                <!-- On app START -->
+                                <Grid
+                                    Grid.Row="3"
+                                    Margin="0,0,0,10"
+                                    ColumnSpacing="10"
+                                    VerticalAlignment="Center"
+                                    ColumnDefinitions="200,Auto,100,Auto,100,Auto,88">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        Foreground="{StaticResource FgBrush}"
+                                        Text="On app start (desktop)"/>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="WIDTH"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="GameWidthBox"
+                                        Grid.Column="2"
+                                        Minimum="640" Maximum="7680" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="HEIGHT"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="GameHeightBox"
+                                        Grid.Column="4"
+                                        Minimum="480" Maximum="4320" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="HZ"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="GameHzBox"
+                                        Grid.Column="6"
+                                        Minimum="30" Maximum="360" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                </Grid>
+
+                                <!-- On app CLOSE -->
+                                <Grid
+                                    Grid.Row="4"
+                                    Margin="0,0,0,18"
+                                    ColumnSpacing="10"
+                                    VerticalAlignment="Center"
+                                    ColumnDefinitions="200,Auto,100,Auto,100,Auto,88">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        Foreground="{StaticResource FgBrush}"
+                                        Text="On app close (desktop)"/>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="WIDTH"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="DefaultWidthBox"
+                                        Grid.Column="2"
+                                        Minimum="640" Maximum="7680" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="HEIGHT"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="DefaultHeightBox"
+                                        Grid.Column="4"
+                                        Minimum="480" Maximum="4320" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        CharacterSpacing="40"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Text="HZ"/>
+                                    <ctrl:NumericSpinner
+                                        x:Name="DefaultHzBox"
+                                        Grid.Column="6"
+                                        Minimum="30" Maximum="360" Step="1"
+                                        ValueChanged="OnResolutionValueChanged"/>
+                                </Grid>
+
+                                <StackPanel
+                                    Grid.Row="5"
+                                    Margin="0,4,0,0"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <Button
+                                        x:Name="TestResolutionButton"
+                                        Click="OnTestResolutionClicked"
+                                        Content="Test (10s)"
+                                        Style="{StaticResource SecondaryActionButtonStyle}"/>
+                                    <TextBlock
+                                        x:Name="TestCountdownText"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        Visibility="Collapsed"
+                                        Text="Reverting in 10s..."/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <!-- CARD: Monitor &amp; Power Plan -->
+                        <Border Style="{StaticResource CardBorderStyle}">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+
+                                <TextBlock
+                                    Margin="0,0,0,14"
+                                    Style="{StaticResource CardTitleTextStyle}"
+                                    Text="MONITOR &amp; POWER PLAN"/>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    Margin="0,0,0,12"
+                                    ColumnSpacing="12"
+                                    ColumnDefinitions="200,*">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        Foreground="{StaticResource FgBrush}"
+                                        Text="Monitor for this app"/>
+                                    <ComboBox
+                                        x:Name="MonitorCombo"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        SelectionChanged="OnMonitorSelectionChanged"/>
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="2"
+                                    Margin="0,0,0,16"
+                                    ColumnSpacing="12"
+                                    ColumnDefinitions="200,*">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        Foreground="{StaticResource FgBrush}"
+                                        Text="Power plan when the app starts"/>
+                                    <ComboBox
+                                        x:Name="PowerPlanCombo"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        SelectionChanged="OnPowerPlanSelectionChanged"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:TabViewItem>
+
+            <!-- Tweaks tab -->
+
+
+                        <controls:TabViewItem Header="Tweaks" IsClosable="False">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="0">
+
+                        <Grid
+                            ColumnSpacing="12"
+                            ColumnDefinitions="1.2*,1*"
+                            Margin="0,0,0,0">
+
+                            <Border Style="{StaticResource CardBorderStyle}">
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,0,0,14"
+                                        Style="{StaticResource CardTitleTextStyle}"
+                                        Text="SYSTEM TWEAKS"/>
+
+                                    <CheckBox x:Name="GlobalTimerCheck" Margin="0,0,0,8" Content="Enable GlobalTimerResolutionRequests = 1"/>
+                                    <CheckBox x:Name="DisableGameBarCheck" Margin="0,0,0,8" Content="Disable Game Bar / DVR"/>
+                                    <CheckBox x:Name="RemoveOverlayCheck" Margin="0,0,0,8" Content="Remove Xbox Gaming Overlay"/>
+
+                                    <Border
+                                        Height="1"
+                                        Background="{StaticResource CardBorderBrush}"
+                                        Margin="0,6,0,14"/>
+
+                                    <TextBlock
+                                        Margin="0,0,0,10"
+                                        Style="{StaticResource SectionTitleTextStyle}"
+                                        Text="INPUT"/>
+
+                                    <CheckBox
+                                        x:Name="StickyKeysCheck"
+                                        Margin="0,0,0,8"
+                                        Content="Disable Sticky Keys shortcut (Shift x5)"/>
+
+                                    <CheckBox
+                                        x:Name="MouseAccelCheck"
+                                        Margin="0,0,0,14"
+                                        Content="Disable mouse acceleration (Enhance Pointer Precision)"/>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="2">
+                                        <Button
+                                            x:Name="ApplyTweaksButton"
+                                            Click="OnApplyTweaksClicked"
+                                            Content="Apply tweaks"
+                                            Style="{StaticResource PrimaryActionButtonStyle}"/>
+                                        <Button
+                                            x:Name="CheckTweaksButton"
+                                            Click="OnCheckTweaksClicked"
+                                            Content="Check current state"
+                                            Style="{StaticResource SecondaryActionButtonStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,0,0,14"
+                                        Style="{StaticResource CardTitleTextStyle}"
+                                        Text="TWEAKS STATE"/>
+                                    <StackPanel x:Name="TweaksStatePanel" Spacing="8"/>
+                                </StackPanel>
+                            </Border>
+
+                        </Grid>
+
+                        <Border Style="{StaticResource CardBorderStyle}">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,14">
+                                    <TextBlock
+                                        Style="{StaticResource CardTitleTextStyle}"
+                                        Text="SYSTEM REPAIR"/>
+                                    <Border
+                                        Grid.Column="1"
+                                        Padding="8,3"
+                                        Background="{StaticResource HeaderRowBrush}"
+                                        BorderBrush="{StaticResource CardBorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                        <TextBlock
+                                            FontSize="11"
+                                            FontWeight="SemiBold"
+                                            Foreground="{StaticResource MutedFgBrush}"
+                                            Text="REQUIRES ADMIN"/>
+                                    </Border>
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    Margin="0,0,0,14"
+                                    ColumnSpacing="12"
+                                    ColumnDefinitions="Auto,Auto,*">
+
+                                    <StackPanel Spacing="4">
+                                        <Button
+                                            x:Name="RunSfcButton"
+                                            Click="OnRunSfcClicked"
+                                            Content="Run SFC"
+                                            Style="{StaticResource SecondaryActionButtonStyle}"/>
+                                        <TextBlock
+                                            FontSize="11"
+                                            Foreground="{StaticResource MutedFgBrush}"
+                                            TextWrapping="Wrap"
+                                            MaxWidth="180"
+                                            Text="Scans and repairs protected Windows files."/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Spacing="4">
+                                        <Button
+                                            x:Name="RunDismButton"
+                                            Click="OnRunDismClicked"
+                                            Content="Run DISM"
+                                            Style="{StaticResource SecondaryActionButtonStyle}"/>
+                                        <TextBlock
+                                            FontSize="11"
+                                            Foreground="{StaticResource MutedFgBrush}"
+                                            TextWrapping="Wrap"
+                                            MaxWidth="200"
+                                            Text="Repairs the Windows image used by SFC."/>
+                                    </StackPanel>
+
+                                    <TextBlock
+                                        x:Name="RepairStatusText"
+                                        Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        FontSize="12"
+                                        Foreground="{StaticResource MutedFgBrush}"
+                                        TextWrapping="NoWrap"
+                                        Text=""/>
+                                </Grid>
+
+                                <ProgressBar
+                                    x:Name="RepairProgressBar"
+                                    Grid.Row="2"
+                                    IsIndeterminate="True"
+                                    Visibility="Collapsed"
+                                    Height="3"
+                                    Foreground="{StaticResource AccentBrush}"
+                                    Background="{StaticResource HeaderRowBrush}"/>
+
+                            </Grid>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:TabViewItem>
+
+            <controls:TabViewItem Header="Settings" IsClosable="False">
+                <Grid ColumnSpacing="12" ColumnDefinitions="1.2*,1*">
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,0,0,14"
+                                    Style="{StaticResource CardTitleTextStyle}"
+                                    Text="APPLICATION"/>
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource SectionTitleTextStyle}" Text="STARTUP"/>
+                                <CheckBox x:Name="StartWithWindowsCheck" Margin="0,0,0,8"  Content="Launch with Windows"/>
+                                <CheckBox x:Name="StartMinimizedCheck"   Margin="0,0,0,18" Content="Start minimized in the tray"/>
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource SectionTitleTextStyle}" Text="APPEARANCE"/>
+                                <TextBlock
+                                    x:Name="ThemeModeInfoText"
+                                    Margin="0,0,0,18"
+                                    Style="{StaticResource MutedTextStyle}"
+                                    TextWrapping="Wrap"
+                                    Text="Dark mode is always enabled."/>
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource SectionTitleTextStyle}" Text="LANGUAGE"/>
+                                <Grid Margin="0,0,0,20" ColumnSpacing="10" ColumnDefinitions="90,*">
+                                    <TextBlock VerticalAlignment="Center" Text="Language" FontSize="13"/>
+                                    <ComboBox x:Name="LanguageCombo" Grid.Column="1"/>
+                                </Grid>
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource SectionTitleTextStyle}" Text="NOTIFICATIONS"/>
+                                <CheckBox x:Name="NotifyOnResolutionChangeCheck" Margin="0,0,0,8"  Content="Notify when the resolution changes"/>
+                                <CheckBox x:Name="NotifyOnPowerPlanChangeCheck"  Margin="0,0,0,18" Content="Notify when the power plan changes"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,14"
+                                Style="{StaticResource CardTitleTextStyle}"
+                                Text="ABOUT"/>
+
+                            <TextBlock Margin="0,0,0,6" FontSize="20" FontWeight="Bold"
+                                       Foreground="{StaticResource FgBrush}" Text="Utility Gamer"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" Text="Version 1.0.0"/>
+                            <TextBlock Margin="0,0,0,12" Style="{StaticResource MutedTextStyle}" Text="by: SMR"/>
+                            <TextBlock Margin="0,0,0,20" Style="{StaticResource MutedTextStyle}"
+                                       TextWrapping="Wrap"
+                                       Text="Automatically switches desktop resolution and power plan when your games start and exit."/>
+
+                            <TextBlock Margin="0,0,0,6" Style="{StaticResource SectionTitleTextStyle}" Text="WHAT IT DOES"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap"
+                                       Text="- Monitors game processes in the background"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap"
+                                       Text="- Changes resolution when a game starts"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap"
+                                       Text="- Restores resolution when the game exits"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap"
+                                       Text="- Activates your preferred power plan per game"/>
+                            <TextBlock Margin="0,0,0,4" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap"
+                                       Text="- Restores the previous power plan on exit"/>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+            </controls:TabViewItem>
+
+        </controls:TabView>
+
+        <!-- Status bar -->
+        <Border
+            Grid.Row="1"
+            Margin="14,0,14,14"
+            Padding="14,8"
+            Background="{StaticResource CardBrush}"
+            BorderBrush="{StaticResource CardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Ellipse
+                    x:Name="StatusDot"
+                    Width="7" Height="7"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Fill="{StaticResource MutedFgBrush}"/>
+                <TextBlock
+                    x:Name="StatusText"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{StaticResource MutedFgBrush}"
+                    Text="Status: Ready."/>
+                <StackPanel
+                    Grid.Column="2"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="11"
+                        FontWeight="SemiBold"
+                        CharacterSpacing="30"
+                        Foreground="{StaticResource MutedFgBrush}"
+                        Text="MONITORING"/>
+                    <ToggleSwitch
+                        x:Name="MonitoringToggle"
+                        MinWidth="0"
+                        Margin="0"
+                        OnContent=""
+                        OffContent=""
+                        Toggled="OnMonitoringToggled"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Page>
+
+
+
+
+
+
+
+
+

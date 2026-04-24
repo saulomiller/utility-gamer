@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "UtilityGamer.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "UtilityGamer.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

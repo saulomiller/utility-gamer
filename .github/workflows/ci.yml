@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore
+        run: |
+          dotnet restore "UtilityGamer.WinUI/UtilityGamer.WinUI.csproj" -r win-x64 -p:Platform=x64 /p:NuGetAudit=false
+          dotnet restore "UtilityGamer.Tests/UtilityGamer.Tests.csproj" /p:NuGetAudit=false
+
+      - name: Build app
+        run: dotnet build "UtilityGamer.WinUI/UtilityGamer.WinUI.csproj" --configuration Release --no-restore -p:Platform=x64 /p:NuGetAudit=false
+
+      - name: Test
+        run: dotnet test "UtilityGamer.Tests/UtilityGamer.Tests.csproj" --configuration Release /p:NuGetAudit=false

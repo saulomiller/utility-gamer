@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+
+    <OutputType>WinExe</OutputType>
+
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>UtilityGamer.WinUI</RootNamespace>
+
+    <UseRidGraph>true</UseRidGraph>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\icons8-engrenagem-24.png"  Link="icons8-engrenagem-24.png"  CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\icons8-engrenagem-48.png"  Link="icons8-engrenagem-48.png"  CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\icons8-engrenagem-96.png"  Link="icons8-engrenagem-96.png"  CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\icons8-engrenagem-100.png" Link="icons8-engrenagem-100.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
+
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+</Project>
+
