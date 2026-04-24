@@ -5,6 +5,11 @@ Utility Gamer é um app desktop para Windows criado para automatizar ajustes do 
 Ele foi pensado para cenários onde o jogo roda em uma resolução diferente da área de trabalho, ajudando a preparar o ambiente automaticamente e restaurar tudo após o jogo fechar.
 
 ---
+<img width="1560" height="1018" alt="image" src="https://github.com/user-attachments/assets/03a0c695-6952-408c-a5be-f594c92cf8fb" />
+<img width="1567" height="1032" alt="image" src="https://github.com/user-attachments/assets/48d5366a-976b-44bf-a488-c34b2cf35696" />
+<img width="1570" height="1033" alt="image" src="https://github.com/user-attachments/assets/368dd43e-d6e9-4518-9629-c579bd07d3fc" />
+
+
 
 # 🎯 Problema que ele resolve
 
