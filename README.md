@@ -79,14 +79,11 @@ Permite:
 
 ---
 
-## Reparos rápidos
 
-Atalhos visuais para:
+## 🛠️ Reparos rápidos
+
+Atalhos visuais para execução de comandos de manutenção do Windows:
 
 ```bash
 sfc /scannow
 dism /Online /Cleanup-Image /RestoreHealth
-
-🗂️ Arquivo de configuração
-
-As configurações do aplicativo são armazenadas localmente no seguinte caminho: %LocalAppData%\UtilityGamer\settings.json
