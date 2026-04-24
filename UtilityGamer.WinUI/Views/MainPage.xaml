@@ -318,7 +318,7 @@
                         </Border>
                         <!-- CARD: Monitor &amp; Power Plan -->
                         <Border Style="{StaticResource CardBorderStyle}">
-                            <Grid RowDefinitions="Auto,Auto,Auto">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto">
 
                                 <TextBlock
                                     Margin="0,0,0,14"
@@ -358,6 +358,14 @@
                                         HorizontalAlignment="Stretch"
                                         SelectionChanged="OnPowerPlanSelectionChanged"/>
                                 </Grid>
+
+                                <CheckBox
+                                    x:Name="BlockWindowsKeyCheck"
+                                    Grid.Row="3"
+                                    Margin="0,0,0,4"
+                                    Content="Block Windows key while this app is running"
+                                    Checked="OnBlockWindowsKeyChanged"
+                                    Unchecked="OnBlockWindowsKeyChanged"/>
                             </Grid>
                         </Border>
                     </StackPanel>

@@ -104,6 +104,17 @@ public sealed class GameProfile : INotifyPropertyChanged
         set => Set(ref _resolutionSwitchEnabled, value);
     }
 
+    private bool _blockWindowsKey;
+
+    /// <summary>
+    /// Blocks the Windows key while this game profile is running.
+    /// </summary>
+    public bool BlockWindowsKey
+    {
+        get => _blockWindowsKey;
+        set => Set(ref _blockWindowsKey, value);
+    }
+
     private string? _monitorDeviceName;
 
     /// <summary>

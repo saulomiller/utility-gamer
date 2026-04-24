@@ -35,7 +35,7 @@ public sealed partial class MainPage : Page
 
     // Runtime state.
     private readonly ObservableCollection<GameProfile> _games = new();
-    private readonly ProcessWatcher _watcher = new();
+    private readonly ProcessWatcher _watcher;
     private IReadOnlyList<DisplayHelper.MonitorInfo> _monitors = Array.Empty<DisplayHelper.MonitorInfo>();
     private IReadOnlyList<PowerPlanHelper.PowerPlan> _powerPlans = Array.Empty<PowerPlanHelper.PowerPlan>();
 
@@ -96,6 +96,7 @@ public sealed partial class MainPage : Page
             ["MONITOR & POWER PLAN"] = new("MONITOR E PLANO DE ENERGIA", "MONITOR Y PLAN DE ENERGIA"),
             ["Monitor for this app"] = new("Monitor deste aplicativo", "Monitor para esta app"),
             ["Power plan when the app starts"] = new("Plano de energia ao iniciar o aplicativo", "Plan de energía al iniciar la app"),
+            ["Block Windows key while this app is running"] = new("Bloquear tecla Windows enquanto este aplicativo estiver rodando"),
             ["Primary"] = new("Principal", "Primario"),
             ["Primary monitor"] = new("Monitor principal", "Monitor primario"),
             ["Do not change"] = new("Não alterar", "No cambiar"),
@@ -177,6 +178,8 @@ public sealed partial class MainPage : Page
                 new("Escolha o monitor que deve receber o perfil de resolução da área de trabalho deste aplicativo."),
             ["Select the power plan to activate when this app starts."] =
                 new("Selecione o plano de energia que será ativado quando este aplicativo iniciar."),
+            ["Prevents accidental Start menu opens by blocking the Windows key while the selected app is running."] =
+                new("Evita abrir o menu Iniciar por acidente bloqueando a tecla Windows enquanto o aplicativo selecionado estiver rodando."),
             ["Enables Windows to honour finer timer resolution requests made by games and low-latency apps."] =
                 new("Permite que o Windows respeite solicitações de resolução de timer mais fina feitas por jogos e aplicativos de baixa latência."),
             ["Disables Game Bar capture and background DVR services that can interfere with performance."] =
@@ -240,6 +243,10 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
+        _watcher = new ProcessWatcher(ProcessWatcher.Dependencies.CreateDefault() with
+        {
+            SetWindowsKeyBlocked = SetWindowsKeyBlockedOnUiThread
+        });
         GamesListView.ItemsSource = _games;
 
         foreach (var language in SupportedLanguages)
@@ -414,7 +421,8 @@ public sealed partial class MainPage : Page
             DefaultWidth  = _defaultReturnWidth,
             DefaultHeight = _defaultReturnHeight,
             DefaultHz     = _defaultReturnHz,
-            ResolutionSwitchEnabled = false
+            ResolutionSwitchEnabled = false,
+            BlockWindowsKey = false
         };
 
         _games.Add(newGame);
@@ -506,6 +514,20 @@ public sealed partial class MainPage : Page
         SaveSettingsDebounced();
     }
 
+    private void OnBlockWindowsKeyChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _isChangingSelection) return;
+
+        var game = GetSelectedGame();
+        if (game is null) return;
+
+        game.BlockWindowsKey = BlockWindowsKeyCheck.IsChecked == true;
+        SaveSettingsDebounced();
+
+        if (_watcher.IsRunning)
+            StartWatcher();
+    }
+
     // Resolution editor.
 
     private void OnResolutionValueChanged(object sender, int newValue)
@@ -573,6 +595,8 @@ public sealed partial class MainPage : Page
             UpdateResolutionControlsState(_defaultResolutionSwitchEnabled);
             MonitorCombo.IsEnabled = false;
             PowerPlanCombo.IsEnabled = false;
+            BlockWindowsKeyCheck.IsEnabled = false;
+            BlockWindowsKeyCheck.IsChecked = false;
             if (MonitorCombo.Items.Count > 0) MonitorCombo.SelectedIndex = 0;
             if (PowerPlanCombo.Items.Count > 0) PowerPlanCombo.SelectedIndex = 0;
             return;
@@ -592,6 +616,8 @@ public sealed partial class MainPage : Page
         UpdateResolutionControlsState(game.ResolutionSwitchEnabled);
         MonitorCombo.IsEnabled = true;
         PowerPlanCombo.IsEnabled = true;
+        BlockWindowsKeyCheck.IsEnabled = true;
+        BlockWindowsKeyCheck.IsChecked = game.BlockWindowsKey;
         if (MonitorCombo.Items.Count > 0)
         {
             var monitorIndex = game.MonitorDeviceName is null
@@ -762,6 +788,17 @@ public sealed partial class MainPage : Page
     {
         _watcher.Stop();
         UpdateMonitoringState();
+    }
+
+    private void SetWindowsKeyBlockedOnUiThread(bool blocked)
+    {
+        if (DispatcherQueue.HasThreadAccess)
+        {
+            WindowsKeyBlocker.SetBlocked(blocked);
+            return;
+        }
+
+        DispatcherQueue.TryEnqueue(() => WindowsKeyBlocker.SetBlocked(blocked));
     }
 
     public void StartWatcherFromTray()
@@ -1504,6 +1541,7 @@ public sealed partial class MainPage : Page
         DefaultHeight = game.DefaultHeight,
         DefaultHz = game.DefaultHz,
         ResolutionSwitchEnabled = game.ResolutionSwitchEnabled,
+        BlockWindowsKey = game.BlockWindowsKey,
         MonitorDeviceName = game.MonitorDeviceName,
         PowerPlanGuid = game.PowerPlanGuid,
         PowerPlanDisplayName = game.PowerPlanDisplayName
@@ -1567,6 +1605,8 @@ public sealed partial class MainPage : Page
             "Choose which monitor should receive the desktop resolution profile for this app.");
         SetTooltip(PowerPlanCombo,
             "Select the power plan to activate when this app starts.");
+        SetTooltip(BlockWindowsKeyCheck,
+            "Prevents accidental Start menu opens by blocking the Windows key while the selected app is running.");
         SetTooltip(GlobalTimerCheck,
             "Enables Windows to honour finer timer resolution requests made by games and low-latency apps.");
         SetTooltip(DisableGameBarCheck,

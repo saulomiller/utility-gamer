@@ -18,6 +18,7 @@ public sealed class ProcessWatcher : IDisposable
         public required Action<string, int, int, int> NotifyResolutionRestored { get; init; }
         public required Action<string, string> NotifyPowerPlanChanged { get; init; }
         public required Action<string> NotifyPowerPlanRestored { get; init; }
+        public required Action<bool> SetWindowsKeyBlocked { get; init; }
         public required Func<TimerCallback, object?, int, int, IDisposable> CreateTimer { get; init; }
 
         public static Dependencies CreateDefault() => new()
@@ -33,6 +34,7 @@ public sealed class ProcessWatcher : IDisposable
             NotifyResolutionRestored = ToastHelper.NotifyResolutionRestored,
             NotifyPowerPlanChanged = ToastHelper.NotifyPowerPlanChanged,
             NotifyPowerPlanRestored = ToastHelper.NotifyPowerPlanRestored,
+            SetWindowsKeyBlocked = WindowsKeyBlocker.SetBlocked,
             CreateTimer = static (callback, state, dueTime, period) =>
                 new Timer(callback, state, dueTime, period)
         };
@@ -42,6 +44,7 @@ public sealed class ProcessWatcher : IDisposable
 
     private readonly List<GameProfile> _profiles = new();
     private readonly HashSet<string> _running = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _windowsKeyBlockers = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, Guid> _previousPowerPlan = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _transitionsInProgress = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _sync = new();
@@ -77,6 +80,7 @@ public sealed class ProcessWatcher : IDisposable
             _profiles.Clear();
             _profiles.AddRange(profiles.Where(p => !string.IsNullOrWhiteSpace(p.ProcessName)));
             _running.Clear();
+            _windowsKeyBlockers.Clear();
             _previousPowerPlan.Clear();
             _transitionsInProgress.Clear();
             _timer = _dependencies.CreateTimer(OnTick, null, 0, PollIntervalMs);
@@ -89,18 +93,23 @@ public sealed class ProcessWatcher : IDisposable
     {
         IDisposable? timer;
         bool wasRunning;
+        bool shouldUnblockWindowsKey;
 
         lock (_sync)
         {
             wasRunning = _timer is not null || _running.Count > 0;
+            shouldUnblockWindowsKey = _windowsKeyBlockers.Count > 0;
             timer = _timer;
             _timer = null;
             _running.Clear();
+            _windowsKeyBlockers.Clear();
             _previousPowerPlan.Clear();
             _transitionsInProgress.Clear();
         }
 
         timer?.Dispose();
+        if (shouldUnblockWindowsKey)
+            _dependencies.SetWindowsKeyBlocked(false);
 
         if (wasRunning)
             StatusChanged?.Invoke("Monitoring stopped.");
@@ -178,6 +187,8 @@ public sealed class ProcessWatcher : IDisposable
 
             if (!started)
                 return;
+
+            UpdateWindowsKeyBlocker(profile, block: true);
 
             var monitorName = string.IsNullOrWhiteSpace(profile.MonitorDeviceName)
                 ? _dependencies.GetPrimaryMonitorName()
@@ -265,7 +276,7 @@ public sealed class ProcessWatcher : IDisposable
             if (!wasRunning)
                 return;
 
-
+            UpdateWindowsKeyBlocker(profile, block: false);
 
             var monitorName = string.IsNullOrWhiteSpace(profile.MonitorDeviceName)
                 ? _dependencies.GetPrimaryMonitorName()
@@ -321,6 +332,25 @@ public sealed class ProcessWatcher : IDisposable
         {
             EndTransition(profile.ProcessName);
         }
+    }
+
+    private void UpdateWindowsKeyBlocker(GameProfile profile, bool block)
+    {
+        if (!profile.BlockWindowsKey)
+            return;
+
+        bool shouldBlock;
+        lock (_sync)
+        {
+            if (block)
+                _windowsKeyBlockers.Add(profile.ProcessName);
+            else
+                _windowsKeyBlockers.Remove(profile.ProcessName);
+
+            shouldBlock = _windowsKeyBlockers.Count > 0;
+        }
+
+        _dependencies.SetWindowsKeyBlocked(shouldBlock);
     }
 
     private static bool IsProcessRunningCore(string processName)

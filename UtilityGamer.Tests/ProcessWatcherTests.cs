@@ -85,6 +85,42 @@ public sealed class ProcessWatcherTests
     }
 
     [TestMethod]
+    public async Task PollNowAsync_BlocksWindowsKeyWhileProfileRuns()
+    {
+        var state = new FakeWatcherState();
+        var dependencies = BuildDependencies(state);
+        using var watcher = new ProcessWatcher(dependencies);
+
+        var profile = CreateProfile(state);
+        profile.BlockWindowsKey = true;
+
+        watcher.Start([profile]);
+        await watcher.PollNowAsync();
+
+        Volatile.Write(ref state.IsProcessRunningFlag, 0);
+        await watcher.PollNowAsync();
+
+        CollectionAssert.AreEqual(new[] { true, false }, state.WindowsKeyBlockedCalls);
+    }
+
+    [TestMethod]
+    public async Task Stop_UnblocksWindowsKey_WhenBlockingProfileIsRunning()
+    {
+        var state = new FakeWatcherState();
+        var dependencies = BuildDependencies(state);
+        using var watcher = new ProcessWatcher(dependencies);
+
+        var profile = CreateProfile(state);
+        profile.BlockWindowsKey = true;
+
+        watcher.Start([profile]);
+        await watcher.PollNowAsync();
+        watcher.Stop();
+
+        CollectionAssert.AreEqual(new[] { true, false }, state.WindowsKeyBlockedCalls);
+    }
+
+    [TestMethod]
     public void GameProfile_SanitizesWhitespaceAndExtensions()
     {
         var profile = new GameProfile
@@ -147,6 +183,7 @@ public sealed class ProcessWatcherTests
         NotifyResolutionRestored = (_, _, _, _) => { },
         NotifyPowerPlanChanged = (_, _) => { },
         NotifyPowerPlanRestored = _ => { },
+        SetWindowsKeyBlocked = blocked => state.WindowsKeyBlockedCalls.Add(blocked),
         CreateTimer = static (_, _, _, _) => new NoopTimer()
     };
 
@@ -170,6 +207,7 @@ public sealed class ProcessWatcherTests
         public readonly object Sync = new();
         public readonly List<(int Width, int Height, int Hz)> SetResolutionCalls = [];
         public readonly List<Guid> SetActivePowerPlanCalls = [];
+        public readonly List<bool> WindowsKeyBlockedCalls = [];
         public readonly Guid PreviousPlan = Guid.Parse("11111111-1111-1111-1111-111111111111");
         public readonly Guid TargetPlan = Guid.Parse("22222222-2222-2222-2222-222222222222");
 
