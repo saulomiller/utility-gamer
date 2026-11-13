@@ -6,8 +6,6 @@
 
 Aplicativo para Windows que acompanha a abertura e o fechamento de jogos para ajustar resolução, frequência do monitor e plano de energia. Cada jogo pode ter um perfil próprio, incluindo bloqueio opcional da tecla Windows.
 
-Este README descreve o código da branch **`main`**. Os recursos em desenvolvimento na `dev`, como Redes, Atualização e prioridades CPU/GPU, ainda não fazem parte desta versão.
-
 [Instalação](#instalação) · [Primeiro uso](#primeiro-uso) · [Recursos](#recursos) · [Limitações](#limitações) · [Desenvolvimento](#desenvolvimento)
 
 ## Instalação
@@ -16,7 +14,7 @@ Este README descreve o código da branch **`main`**. Os recursos em desenvolvime
 2. Se houver um instalador x64, execute-o e siga as instruções.
 3. Abra o Utility Gamer pelo menu Iniciar.
 
-O projeto usa WinUI 3 e declara plataforma mínima Windows `10.0.19041.0`. O script de instalador desta branch gera pacotes x64 autocontidos; o SDK .NET é necessário para desenvolver, não para usar esse pacote.
+O projeto usa WinUI 3 e declara plataforma mínima Windows `10.0.19041.0`. O script de instalador gera pacotes x64 autocontidos; o SDK .NET é necessário para desenvolver, não para usar esse pacote.
 
 > [!NOTE]
 > Um executável sem assinatura pode ser bloqueado pelos mecanismos de proteção do Windows. Baixar um arquivo de uma release não comprova que ele esteja assinado. Confira a origem e a versão do pacote.
@@ -45,7 +43,7 @@ Antes de pausar o monitoramento ou encerrar o Utility Gamer, feche o jogo e conf
 
 ### Ajustes do sistema
 
-Nesta branch, as caixas da área de ajustes são escolhas para o botão **Aplicar ajustes**. Esses ajustes são executados manualmente; não devem ser confundidos com os efeitos aplicados ao abrir um jogo.
+As caixas da área de ajustes são escolhas para o botão **Aplicar ajustes**. Esses ajustes são executados manualmente; não devem ser confundidos com os efeitos aplicados ao abrir um jogo.
 
 Os ajustes de sistema podem permanecer no Windows após o app fechar. Não presuma que desmarcar uma opção desfaz todas as ações anteriores, especialmente a remoção do Xbox Gaming Overlay. Confira o estado apresentado pela interface e o resultado de cada operação.
 
@@ -58,7 +56,7 @@ dism /Online /Cleanup-Image /RestoreHealth
 
 ### Interface
 
-A captura abaixo pertence à apresentação já utilizada nesta branch. O pacote instalado pode diferir conforme a release:
+O pacote instalado pode diferir da captura conforme a release:
 
 ![Interface do Utility Gamer](https://github.com/user-attachments/assets/03a0c695-6952-408c-a5be-f594c92cf8fb)
 
@@ -69,11 +67,9 @@ A captura abaixo pertence à apresentação já utilizada nesta branch. O pacote
 - Use resoluções e frequências compatíveis com o monitor. Os valores de retorno do perfil precisam corresponder ao desktop desejado.
 - A detecção por processo tem intervalo de consulta; os ajustes não são necessariamente aplicados antes da primeira imagem do jogo.
 - Falhas de API, permissões e diferenças de driver podem impedir aplicação ou restauração. Confira os estados após o jogo fechar.
-- A refatoração com diário de recuperação e os novos serviços da `dev` não estão presentes nesta `main`.
-
 ## Configurações locais
 
-O código desta branch armazena as configurações em:
+As configurações são armazenadas em:
 
 ```text
 %LOCALAPPDATA%\UtilityGamer\settings.json
@@ -83,11 +79,11 @@ Faça uma cópia antes de editar esse arquivo manualmente e encerre o aplicativo
 
 ## Desenvolvimento
 
-A `main` usa **C#, .NET 9, WinUI 3 e Windows App SDK 1.8.251106002**. Ela contém os projetos `UtilityGamer.WinUI` e `UtilityGamer.Tests`; não há um projeto Core separado nesta branch.
+O projeto usa **C#, .NET 9, WinUI 3 e Windows App SDK 1.8.251106002**, com os projetos `UtilityGamer.WinUI` e `UtilityGamer.Tests`.
 
 Prepare o SDK .NET 9 e as ferramentas Windows/WinUI compatíveis com o projeto. Para gerar o instalador, instale também o Inno Setup 6.
 
-Na raiz do checkout da `main`, em PowerShell:
+Na raiz do repositório, em PowerShell:
 
 ```powershell
 dotnet restore UtilityGamer.WinUI/UtilityGamer.WinUI.csproj -r win-x64 -p:Platform=x64
@@ -96,7 +92,7 @@ dotnet build UtilityGamer.WinUI/UtilityGamer.WinUI.csproj -c Release -p:Platform
 dotnet test UtilityGamer.Tests/UtilityGamer.Tests.csproj -c Release --no-restore
 ```
 
-O workflow desta branch também executa build e testes nos eventos configurados para `main` e `master`.
+O workflow executa build e testes nos eventos configurados para `main` e `master`.
 
 ### Gerar instalador
 
@@ -104,6 +100,6 @@ O workflow desta branch também executa build e testes nos eventos configurados 
 .\scripts\Build-Installer.ps1 -RuntimeIdentifier win-x64 -Configuration Release
 ```
 
-Confira os parâmetros e diretórios de saída em `scripts/Build-Installer.ps1`. Não use os parâmetros de assinatura ou validação documentados para a `dev` sem verificar se existem nesta versão do script.
+Confira os parâmetros e diretórios de saída em `scripts/Build-Installer.ps1`.
 
 Esta atualização modifica apenas a documentação. Ela não comprova uma nova compilação, assinatura, publicação de release ou correção dos problemas conhecidos do aplicativo.
